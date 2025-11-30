@@ -6,54 +6,75 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
+const port = process.env.PORT || 3000;
+const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const today = new Date().toISOString().slice(0,10); //YYYY-MM-DD
 
 const WEATHER_API_URL = "https://api.openweathermap.org/data/3.0/onecall";
 const API_KEY = process.env.API_KEY;
-console.log(API_KEY);
-
-const port = process.env.PORT || 3000;
-const app = express();
+const JSON_path = path.join(__dirname,"api-call-limit.json");
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
+function getState() {
+    return JSON.parse(fs.readFileSync(JSON_path, "utf-8"));
+}
+
+function setState(state) {
+    fs.writeFileSync(JSON_path, JSON.stringify(state, null, 4));
+}
+
+function canCallAPI() {
+    const JSON_API = getState();
+    const apiCallLimit = JSON_API.limit;  //Max 1000 on OpenWeatherApp 3.0 free plan
+  
+    if (JSON_API.resetOn !== today) {
+        JSON_API.count = 0;
+        JSON_API.resetOn = today;
+        setState(JSON_API);
+    }
+    return JSON_API.count < apiCallLimit;  
+}
 
 app.get("/", async (req, res) => {
     console.log(__dirname);
-    const JSON_API = JSON.parse(fs.readFileSync(path.join(__dirname,"api-call-limit.json")));
-    const API_CALL_LIMIT = JSON_API.limit;  //Max 1000 on OpenWeatherApp 3.0 free plan
-    const today = new Date().toISOString().slice(0,10); //YYYY-MM-DD
+    const JSON_API = getState();
     
-    if (JSON_API.reset !== today) {
-        JSON_API.count = 0;
-        JSON_API.reset = today;
-        fs.writeFileSync(path.join(__dirname,"api-call-limit.json"), JSON.stringify(JSON_API, null, 4));
+    if (!canCallAPI()) {
+        return res.send("API call limit reached. Please try again tomorrow.");
     }
 
-    if (JSON_API.count >= API_CALL_LIMIT) {
-        return res.send("API call limit reached. Please try again later.");
-    }
-    
     //Goa,India
-    // const latNow = "15.2993";
-    // const lonNow = "74.1240";
-    // const result = await axios.get(
-    //     WEATHER_API_URL,
-    //     {
-    //         params: {
-    //             lat: latNow,
-    //             lon: lonNow,
-    //             appid: API_KEY
-    //         }
-    //     }    
-    // )
+    const latNow = "15.2128";
+    const lonNow = "74.0772";
+    const result = await axios.get(
+        WEATHER_API_URL,
+        {
+            params: {
+                lat: latNow,
+                lon: lonNow,
+                appid: API_KEY
+            }
+        }    
+    )
     JSON_API.count++;
-    fs.writeFileSync(path.join(__dirname,"api-call-limit.json"), JSON.stringify(JSON_API, null, 4));
-    //console.log(result.data);
-   
-    res.render("index.ejs");
+    setState(JSON_API);
+    
+    const weatherDescription = result.data.current.weather[0].description;
+    const tempCelsius = (result.data.current.temp - 273.15).toFixed(2);
+    const feelsLikeCelsius = (result.data.current.feels_like - 273.15).toFixed(2);
+    const humidity = result.data.current.humidity;
+
+    res.render("index.ejs", {
+        weatherDescription: weatherDescription,
+        tempCelsius: tempCelsius,
+        feelsLikeCelsius: feelsLikeCelsius,
+        humidity: humidity
+    });
 });
 
 app.listen(port, () => {
