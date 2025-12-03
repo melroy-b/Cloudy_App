@@ -6,9 +6,8 @@
 </head>
 
 
-<body>
-    <section class="vh-100" style="background-color: #f5f6f7;">
-        <div class="container py-5 h-100">
+<body style="background-color: #f5f6f7;">
+        <!-- <div class="container py-5 h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col-md-10 col-lg-8 col-xl-6">
 
@@ -28,8 +27,30 @@
 
                 </div>
             </div>
+        </div> -->
+    <section class="vh-100">
+        <div class="container py-5">
+            <div class="row d-flex">
+                <div class="col">
+                    <h1 class="my-3" style="font-size: 20vh;"><%= tempCelsius %><span style="font-size: 5vh;">°C</span></h1>
+                    <h4 class="my-3">Feels Like: 
+                        <strong><%= feelsLikeCelsius %> °C</strong>
+                        <img src="https://openweathermap.org/img/wn/<%=icon%>.png" alt="">
+                    </h4>
+                    <h3 class="my-3"><%= weatherDescription %></h3>
+                </div> 
+                <div class="col">
+                    <h5 class="my-3">Weather Summary</h5>
+                    <p>
+                        <%= locals.overviewResults  %>
+                    </p>
+                </div> 
+            </div>
+            
         </div>
     </section>  
+    
+    <p>API Calls Remaining: <strong><%= apiCallsLeft %></strong></p>
 </body>
 
 
