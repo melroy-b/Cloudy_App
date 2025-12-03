@@ -83,6 +83,7 @@ app.get("/", async (req, res) => {
     const humidity = result.data.current.humidity;
     const apiCallsLeft = JSON_API.limit - JSON_API.count;
     const icon = result.data.current.weather[0].icon;
+    const daily = result.data.daily;
     console.log(`API Calls Left: ${apiCallsLeft}`);
 
     res.render("index.ejs", {
@@ -92,6 +93,7 @@ app.get("/", async (req, res) => {
         humidity: humidity,
         apiCallsLeft: apiCallsLeft,
         icon: icon,
+        forecast: daily,
         overviewResults: overviewResults
     });
 });
