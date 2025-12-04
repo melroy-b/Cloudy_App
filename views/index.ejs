@@ -8,7 +8,7 @@
     <section>
         <div class="container py-2">
             <div class="row d-flex">
-                <div class="col">
+                <div class="col-6">
                     <h4 class="mt-3">Quepem, Goa, India</h4> <p><%= forecast[0].dt %></p>
                     <h1 class="mb-3" style="font-size: 18vh;"><%= tempCelsius %><span style="font-size: 5vh;">°C</span></h1>
                     <h4>Feels Like: 
@@ -19,7 +19,7 @@
                         <img src="https://openweathermap.org/img/wn/<%=icon%>.png" alt="weather-icon">
                     </h4>
                 </div>
-                <div class="col">
+                <div class="col-6">
                     <h5 class="my-3">Weather Summary</h5>
                     <p>
                         <%= locals.overviewResults  %>
@@ -28,13 +28,18 @@
                 
             </div>
             <div class="row d-flex">
-                <div class="col">
+                <div class="col-6">
+                    <h3 class="mt-4">Humidity</h3>
+                    <h4><%= humidity %> %</h4>
+
+                </div>
+                <div class="col-6">
                     <br>
-                    <h5>8-day forecast</h5>
+                    <h3>8-day forecast</h3>
                     <ul class="list-unstyled">
                         <% for (let index = 0; index < forecast.length; index++) { %>
                         <% const element = forecast[index]; %>
-                        <li class="d-flex gap-3 align-items-center border-bottom py-2">
+                        <li class="d-flex gap-3 align-items-center py-1">
                             <span style="width: 100px;"><%= element.dt %></span>
                             <div class="d-flex gap-1 align-items-center">
                                 <img src="https://openweathermap.org/img/wn/<%=element.weather[0].icon%>.png" alt="weather-icon"> 
