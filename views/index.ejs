@@ -5,19 +5,19 @@
     </div>
 
 
-    <section class="vh-100">
+    <section>
         <div class="container py-2">
             <div class="row d-flex">
                 <div class="col">
-                    <h4 class="mt-3">Quepem, Goa, India</h4>
+                    <h4 class="mt-3">Quepem, Goa, India</h4> <p><%= forecast[0].dt %></p>
                     <h1 class="mb-3" style="font-size: 18vh;"><%= tempCelsius %><span style="font-size: 5vh;">°C</span></h1>
                     <h4>Feels Like: 
                         <strong><%= feelsLikeCelsius %> °C</strong>
                     </h4>
-                    <h3 class="mb-3">
+                    <h4 class="mb-3">
                         <%= weatherDescription %>
                         <img src="https://openweathermap.org/img/wn/<%=icon%>.png" alt="weather-icon">
-                    </h3>
+                    </h4>
                 </div>
                 <div class="col">
                     <h5 class="my-3">Weather Summary</h5>
@@ -29,10 +29,18 @@
             </div>
             <div class="row d-flex">
                 <div class="col">
-                    <ul>
-                        <% for (let index = 0; index < forecast.length - 5; index++) { %>
+                    <br>
+                    <h5>8-day forecast</h5>
+                    <ul class="list-unstyled">
+                        <% for (let index = 0; index < forecast.length; index++) { %>
                         <% const element = forecast[index]; %>
-                            <li>Day: <strong><%= (element.temp.day - 273.15).toFixed(2) %></strong> <img src="https://openweathermap.org/img/wn/<%=element.weather[0].icon%>.png" alt="weather-icon"></li>
+                        <li class="d-flex gap-3 align-items-center border-bottom py-2">
+                            <span style="width: 100px;"><%= element.dt %></span>
+                            <div class="d-flex gap-1 align-items-center">
+                                <img src="https://openweathermap.org/img/wn/<%=element.weather[0].icon%>.png" alt="weather-icon"> 
+                                <span><%= element.temp.min.toFixed(0) %> / <%= element.temp.max.toFixed(0) %> °C</span>
+                            </div>
+                        </li>
                         <% } %>
                     </ul>
                 </div>

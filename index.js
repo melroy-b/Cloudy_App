@@ -42,6 +42,21 @@ function canCallAPI() {
     return JSON_API.count < apiCallLimit;  
 }
 
+function getDailyForecast(result) {
+    //To be implemented in future
+    if (!result || !result.data || !result.data.daily) {
+        return [];
+    }
+
+    const options = { weekday: 'short',  month: 'short', day: '2-digit' };
+    const dailyForecast = result.data.daily;
+    for (let i = 0; i < dailyForecast.length; i++) {
+        dailyForecast[i].dt = new Date(dailyForecast[i].dt * 1000).toLocaleDateString('en-US', options);
+    }
+
+    return dailyForecast;
+}
+
 app.get("/", async (req, res) => {
     console.log(__dirname);
     JSON_API = getState();
@@ -59,6 +74,7 @@ app.get("/", async (req, res) => {
             params: {
                 lat: latNow,
                 lon: lonNow,
+                units: "metric",
                 appid: API_KEY
             }
         }    
@@ -78,12 +94,13 @@ app.get("/", async (req, res) => {
     setState(JSON_API);
     
     const weatherDescription = result.data.current.weather[0].description;
-    const tempCelsius = (result.data.current.temp - 273.15).toFixed(2);
-    const feelsLikeCelsius = (result.data.current.feels_like - 273.15).toFixed(2);
+    const tempCelsius = result.data.current.temp.toFixed(2);
+    const feelsLikeCelsius = result.data.current.feels_like.toFixed(2);
     const humidity = result.data.current.humidity;
-    const apiCallsLeft = JSON_API.limit - JSON_API.count;
     const icon = result.data.current.weather[0].icon;
-    const daily = result.data.daily;
+    const daily = getDailyForecast(result);
+    
+    const apiCallsLeft = JSON_API.limit - JSON_API.count;
     console.log(`API Calls Left: ${apiCallsLeft}`);
 
     res.render("index.ejs", {
