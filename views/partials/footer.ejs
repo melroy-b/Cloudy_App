@@ -19,7 +19,45 @@
         </footer>
     </div>
 
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.querySelector('.weather-chart');
+        const hourlyForecast = <%- JSON.stringify(hourlyForecast) %>;
 
+        const hourlyLabels = hourlyForecast.map(item => item.dt);
+        const hourlyTemps = hourlyForecast.map(item => item.temp);
+
+        const weatherChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hourlyLabels,
+                datasets: [{
+                    label: 'Hourly Temperature (°C)',
+                    data: hourlyTemps,
+                    borderColor: '#e96e50',
+                    backgroundColor: 'rgb(233, 110, 80, 0.2)',
+                    fill: true,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Time'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Temperature (°C)'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
 
 </html> 
