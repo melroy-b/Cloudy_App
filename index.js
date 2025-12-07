@@ -44,7 +44,7 @@ function canCallAPI() {
     return JSON_API.count < apiCallLimit;  
 }
 
-function getDailyForecastDate(result) {
+function convertDailyForecastDate(result) {
     //To be implemented in future
     if (!result || !result.data || !result.data.daily) {
         return [];
@@ -57,6 +57,21 @@ function getDailyForecastDate(result) {
     }
 
     return dailyForecast;
+}
+
+function CreateGraphData(result) {
+    //To be implemented in future
+    if (!result || !result.data || !result.data.daily) {
+        return [];
+    }
+
+    const hourlyForecast = result.data.hourly;
+    const options = { hour: "numeric",hour12: true };
+    for (let i = 0; i < 10; i++) {
+        hourlyForecast[i].dt = new Date(hourlyForecast[i].dt * 1000).toLocaleString('en-US', options);
+    }
+
+    return hourlyForecast.slice(0,10);
 }
 
 app.get("/", async (req, res) => {
@@ -102,7 +117,7 @@ app.get("/", async (req, res) => {
     // const humidity = resultWeather.data.current.humidity;
     // const icon = resultWeather.data.current.weather[0].icon;
     // const dailyForecast = getDailyForecastDate(resultWeather);
-    
+
     const apiCallsLeft = JSON_API.limit - JSON_API.count;
     console.log(`API Calls Left: ${apiCallsLeft}`);
 
@@ -110,10 +125,11 @@ app.get("/", async (req, res) => {
         apiCallsLeft: apiCallsLeft,
         weatherDescription: resultWeather.data?.current,
         weatherOverview: resultWeatherOverview.data?.weather_overview,
-        dailyForecast: getDailyForecastDate(resultWeather)
+        dailyForecast: convertDailyForecastDate(resultWeather),
+        hourlyForecast: CreateGraphData(resultWeather)
 
         // weatherDescription: weatherDescription,
-        // tempCelsius: tempCelsius,
+        // tempCelsius: tempCelsius,    
         // feelsLikeCelsius: feelsLikeCelsius,
         // humidity: humidity,
         // icon: icon,
