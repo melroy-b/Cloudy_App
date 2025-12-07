@@ -6,16 +6,18 @@ import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
 
-const port = process.env.PORT || 3000;
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const port = process.env.PORT || 3000;
+const API_KEY = process.env.API_KEY;
+
 const today = new Date().toISOString().slice(0,10); //YYYY-MM-DD
 let overviewResults = "";
 let JSON_API = {};
 
 const WEATHER_API_URL = "https://api.openweathermap.org/data/3.0/onecall";
-const API_KEY = process.env.API_KEY;
 const JSON_path = path.join(__dirname,"api-call-limit.json");
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -42,7 +44,7 @@ function canCallAPI() {
     return JSON_API.count < apiCallLimit;  
 }
 
-function getDailyForecast(result) {
+function getDailyForecastDate(result) {
     //To be implemented in future
     if (!result || !result.data || !result.data.daily) {
         return [];
@@ -68,7 +70,7 @@ app.get("/", async (req, res) => {
     //Goa,India
     const latNow = "15.2128";
     const lonNow = "74.0772";
-    const result = await axios.get(
+    const resultWeather = await axios.get(
         WEATHER_API_URL,
         {
             params: {
@@ -79,71 +81,47 @@ app.get("/", async (req, res) => {
             }
         }    
     )
-    const Results = await axios.get(
+    const resultWeatherOverview = await axios.get(
         `${WEATHER_API_URL}/overview`, 
         {
             params: {
                 lat: latNow,
                 lon: lonNow,
+                units: "metric",
                 appid: API_KEY
             }
         }
     );
-    overviewResults = Results.data?.weather_overview;
+  
     JSON_API.count+=2;
     setState(JSON_API);
     
-    const weatherDescription = result.data.current.weather[0].description;
-    const tempCelsius = result.data.current.temp.toFixed(2);
-    const feelsLikeCelsius = result.data.current.feels_like.toFixed(2);
-    const humidity = result.data.current.humidity;
-    const icon = result.data.current.weather[0].icon;
-    const daily = getDailyForecast(result);
+    // const weatherDescription = resultWeather.data.current.weather[0].description;
+    // const tempCelsius = resultWeather.data.current.temp.toFixed(2);
+    // const feelsLikeCelsius = resultWeather.data.current.feels_like.toFixed(2);
+    // const humidity = resultWeather.data.current.humidity;
+    // const icon = resultWeather.data.current.weather[0].icon;
+    // const dailyForecast = getDailyForecastDate(resultWeather);
     
     const apiCallsLeft = JSON_API.limit - JSON_API.count;
     console.log(`API Calls Left: ${apiCallsLeft}`);
 
     res.render("index.ejs", {
-        weatherDescription: weatherDescription,
-        tempCelsius: tempCelsius,
-        feelsLikeCelsius: feelsLikeCelsius,
-        humidity: humidity,
         apiCallsLeft: apiCallsLeft,
-        icon: icon,
-        forecast: daily,
-        overviewResults: overviewResults
+        weatherDescription: resultWeather.data?.current,
+        weatherOverview: resultWeatherOverview.data?.weather_overview,
+        dailyForecast: getDailyForecastDate(resultWeather)
+
+        // weatherDescription: weatherDescription,
+        // tempCelsius: tempCelsius,
+        // feelsLikeCelsius: feelsLikeCelsius,
+        // humidity: humidity,
+        // icon: icon,
+        // forecast: daily,
+        // overviewResults: overviewResults
     });
 });
-
-// app.post("/overview", async (req, res) => {
-//     try {
-//         JSON_API = getState();
-    
-//         if (!canCallAPI()) {
-//             return res.send("API call limit reached. Please try again tomorrow.");
-//         }
-
-//         const Results = await axios.get(path.join(WEATHER_API_URL, "overview"), {
-//             params: {
-//                 lat: latNow,
-//                 lon: lonNow,
-//                 appid: API_KEY
-//             }
-//         });
-//         overviewResults = Results.data?.weather_overview;
-//         JSON_API.count++;
-//         setState(JSON_API); 
-//         res.redirect("/");
-//     } catch (error) {
-//         console.error("Error fetching weather overview:", error);
-//         res.status(500).send("Error fetching weather overview");
-//     }
-// });
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
-
-
-
-
