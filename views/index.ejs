@@ -9,42 +9,42 @@
         <div class="container py-2">
             <div class="row d-flex">
                 <div class="col-6">
-                    <h4 class="mt-3">Quepem, Goa, India</h4> <p><%= forecast[0].dt %></p>
-                    <h1 class="mb-3" style="font-size: 18vh;"><%= tempCelsius %><span style="font-size: 5vh;">°C</span></h1>
-                    <h4>Feels Like: 
-                        <strong><%= feelsLikeCelsius %> °C</strong>
-                    </h4>
-                    <h4 class="mb-3">
-                        <%= weatherDescription %>
-                        <img src="https://openweathermap.org/img/wn/<%=icon%>.png" alt="weather-icon">
-                    </h4>
+                    <h4 class="mt-3">Quepem, Goa, India</h4> <p><%= dailyForecast[0].dt %></p>
+                    <h1 class="mb-3" style="font-size: 18vh;"><%= weatherDescription.temp.toFixed(2) %><span style="font-size: 5vh;">°C</span></h1>
+                    <p class="mb-0">Feels Like: 
+                        <strong><%= weatherDescription.feels_like.toFixed(2) %> °C</strong>
+                    </p>
+                    <p class="mb-3">
+                        <%= weatherDescription.weather[0].description %>
+                        <img src="https://openweathermap.org/img/wn/<%=weatherDescription.weather[0].icon%>.png" alt="weather-icon">
+                    </p>
                 </div>
                 <div class="col-6">
                     <h5 class="my-3">Weather Summary</h5>
                     <p>
-                        <%= locals.overviewResults  %>
+                        <%= weatherOverview  %>
                     </p>
                 </div>
                 
             </div>
             <div class="row d-flex">
-                <div class="col-6">
-                    <h3 class="mt-4">Humidity</h3>
-                    <h4><%= humidity %> %</h4>
+                <!-- <div class="col-6">
+                    <h3 class="mb-4">Humidity</h3>
+                    <h4><%= weatherDescription.humidity %> %</h4>
 
-                </div>
+                </div> -->
                 <div class="col-6">
-                    <br>
                     <h3>8-day forecast</h3>
                     <ul class="list-unstyled">
-                        <% for (let index = 0; index < forecast.length; index++) { %>
-                        <% const element = forecast[index]; %>
-                        <li class="d-flex gap-3 align-items-center py-1">
+                        <% for (let index = 0; index < dailyForecast.length; index++) { %>
+                        <% const element = dailyForecast[index]; %>
+                        <li class="d-flex gap-5 align-items-center py-1">
                             <span style="width: 100px;"><%= element.dt %></span>
                             <div class="d-flex gap-1 align-items-center">
                                 <img src="https://openweathermap.org/img/wn/<%=element.weather[0].icon%>.png" alt="weather-icon"> 
                                 <span><%= element.temp.min.toFixed(0) %> / <%= element.temp.max.toFixed(0) %> °C</span>
                             </div>
+                            <span><%= element.weather[0].description %></span>
                         </li>
                         <% } %>
                     </ul>
