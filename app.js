@@ -10,7 +10,6 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const port = process.env.PORT || 3000;
 const API_KEY = process.env.API_KEY;
 
 const today = new Date().toISOString().slice(0,10); //YYYY-MM-DD
@@ -20,6 +19,7 @@ let JSON_API = {};
 const WEATHER_API_URL = "https://api.openweathermap.org/data/3.0/onecall";
 const JSON_path = path.join(__dirname,"api-call-limit.json");
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
@@ -138,6 +138,5 @@ app.get("/", async (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+
+export default app;
