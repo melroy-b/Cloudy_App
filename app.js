@@ -121,7 +121,7 @@ app.get("/", async (req, res) => {
     const apiCallsLeft = JSON_API.limit - JSON_API.count;
     console.log(`API Calls Left: ${apiCallsLeft}`);
 
-    res.render("index.ejs", {
+    res.render("app.ejs", {
         apiCallsLeft: apiCallsLeft,
         weatherDescription: resultWeather.data?.current,
         weatherOverview: resultWeatherOverview.data?.weather_overview,

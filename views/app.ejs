@@ -8,7 +8,7 @@
     <section>   
         <div class="container-fluid py-2">
             <div class="row">
-                <div class="col-12 col-md-5">
+                <div class="col-12 col-lg-5">
                     <h4 class="mt-3">Quepem, Goa, India</h4> 
                     <p><%= new Date(weatherDescription.dt * 1000).toLocaleString("en-US", { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }) %></p>
                     <h1 class="mb-3 display-1 display-md-3"><%= weatherDescription.temp.toFixed(2) %><span style="font-size: 5vh;">°C</span></h1>
@@ -20,7 +20,7 @@
                         <img src="https://openweathermap.org/img/wn/<%=weatherDescription.weather[0].icon%>.png" alt="weather-icon">
                     </p>
                 </div>
-                <div class="col-12 col-md-7">
+                <div class="col-12 col-lg-7">
                     <h3 class="mt-3">Weather Summary</h5>
                     <p>
                         <%= weatherOverview  %>
@@ -29,7 +29,7 @@
                 
             </div>
             <div class="row">               
-                <div class="col-12 col-md-5">
+                <div class="col-12 col-lg-5">
                     <h3 class="mt-3">8-day forecast</h3>
                     <ul class="list-unstyled">
                         <% for (let index = 0; index < dailyForecast.length; index++) { %>
@@ -45,7 +45,7 @@
                         <% } %>
                     </ul>
                 </div>
-                <div class="col-12 col-md-7">
+                <div class="col-12 col-lg-7">
                     <h3 class="mt-3">Hourly forecast</h3>
                     <canvas class="weather-chart"></canvas>
                 </div>
