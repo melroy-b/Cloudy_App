@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 3000
 
 #star the app
-CMD ["node","app.js"]
+CMD ["node","server.js"]
