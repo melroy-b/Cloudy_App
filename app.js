@@ -12,6 +12,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
+let geoCodeData = {};
+
 app.get("/", async (req, res) => {
     //JSON_API = apiQuery.getState();
     
@@ -21,7 +23,7 @@ app.get("/", async (req, res) => {
     }
   
     const resultWeather = await apiQuery.queryWeatherData();
-    const resultWeatherOverview = await apiQuery.queryWeatherDataOverview;
+    const resultWeatherOverview = await apiQuery.queryWeatherDataOverview();
     canCallAPI.data.count+=2;
     apiQuery.setState(canCallAPI.data);
     
@@ -38,10 +40,10 @@ app.get("/", async (req, res) => {
     res.render("app.ejs", {
         apiCallsLeft: apiCallsLeft,
         weatherDescription: resultWeather.data?.current,
-        weatherOverview: resultWeatherOverview.data?.weather_overview,
+        weatherOverview: resultWeatherOverview.data?.weather_overview || "Data Not Found",
         dailyForecast: apiQuery.convertDailyForecastDate(resultWeather),
-        hourlyForecast: apiQuery.CreateGraphData(resultWeather)
-
+        hourlyForecast: apiQuery.CreateGraphData(resultWeather),
+        geoCodeData: geoCodeData
         // weatherDescription: weatherDescription,
         // tempCelsius: tempCelsius,    
         // feelsLikeCelsius: feelsLikeCelsius,
@@ -52,5 +54,21 @@ app.get("/", async (req, res) => {
     });
 });
 
+app.post("/search", async (req, res) => {
+    const searchItem = req.body.searchPlace.trim();
 
-export default app;
+    if (!searchItem) {
+        return res.redirect("/");
+    }
+    try {      
+        geoCodeData = await apiQuery.queryGeocodingData(searchItem);
+        console.log(geoCodeData);
+
+        res.redirect("/");
+    } catch (error) {
+        
+    }
+})
+
+
+export default app; 

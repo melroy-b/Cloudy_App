@@ -12,8 +12,8 @@ let JSON_API = {};
 const WEATHER_API_URL = "https://api.openweathermap.org/data/3.0/onecall";
 const FW_GEOCODING_API_URL = "http://api.openweathermap.org/geo/1.0/direct";
 //Goa,India
-const latNow = "15.2128";
-const lonNow = "74.0772";
+let latNow = 15.2128;
+let lonNow = 74.0772;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -84,6 +84,7 @@ async function forwardGeocodingSearch() {
 }
 
 async function queryWeatherData() {
+    // console.log("Weather: " + typeof(latNow));
     return await axios.get(
         WEATHER_API_URL,
         {
@@ -111,4 +112,32 @@ async function queryWeatherDataOverview() {
     )
 }
 
-export {getState, setState, canCallAPI, convertDailyForecastDate, CreateGraphData, queryWeatherData, queryWeatherDataOverview};
+async function queryGeocodingData(place) {
+
+    try {
+        
+        const result = await axios.get(
+            FW_GEOCODING_API_URL,
+            {   
+                params: {
+                    q: place,
+                    limit: 5,
+                    appid: API_KEY
+                }
+            }    
+        )
+        
+        const country = result.data[0].country;
+        const state = result.data[0].state;
+        const placeFound = result.data[0].name;   
+        latNow = result.data[0].lat;
+        lonNow = result.data[0].lon;
+       
+        
+        return {placeFound, state, country};
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export {getState, setState, canCallAPI, convertDailyForecastDate, CreateGraphData, queryWeatherData, queryWeatherDataOverview, queryGeocodingData};
