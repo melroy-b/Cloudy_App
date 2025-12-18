@@ -63,7 +63,6 @@ app.post("/search", async (req, res) => {
     try {      
         geoCodeData = await apiQuery.queryGeocodingData(searchItem);
         console.log(geoCodeData);
-
         res.redirect("/");
     } catch (error) {
         
