@@ -126,15 +126,19 @@ async function queryGeocodingData(place) {
                 }
             }    
         )
-        
-        const country = result.data[0].country;
-        const state = result.data[0].state;
-        const placeFound = result.data[0].name;   
-        latNow = result.data[0].lat;
-        lonNow = result.data[0].lon;
-       
-        
+
+        let country, state, placeFound;  
+        if (!result.data.length > 0) {
+            return {placeFound: null, state: null, country: null};
+        } else {
+            country = result.data[0].country;
+            state = result.data[0].state;
+            placeFound = result.data[0].name;   
+            latNow = result.data[0].lat;
+            lonNow = result.data[0].lon;   
+        }
         return {placeFound, state, country};
+
     } catch (error) {
         console.log(error);
     }

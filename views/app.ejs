@@ -9,7 +9,7 @@
         <div class="container-fluid py-2">
             <div class="row">
                 <div class="col-12 col-lg-5">
-                    <% if (geoCodeData.placeFound) { %>
+                    <% if (geoCodeData.placeFound != null) { %>
                         <h4 class="mt-3"><%= geoCodeData.placeFound %>, <%= geoCodeData.state %>, <%= geoCodeData.country %></h4>     
                     <% } else { %>
                         <h4 class="mt-3">Quepem, Goa, India</h4>                      
