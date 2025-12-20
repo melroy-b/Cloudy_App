@@ -6,7 +6,7 @@
 
      <!-- Main Content -->
     <section>   
-        <div class="container-fluid pb-2">
+        <div class="container pb-2">
             <div class="row">
                 <div class="col-12 col-xl-5">
                     <% if (geoCodeData.placeFound) { %>
@@ -17,7 +17,9 @@
                     <p><%= new Date(weatherDescription.dt * 1000).toLocaleString("en-US", { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true }) %></p>
                     <h1 class="mb-3 display-1 display-md-3"><%= weatherDescription.temp.toFixed(2) %><span class="display-4 display-md-6 text-body-secondary">°C</span></h1>
                     <p class="mb-0">Feels Like: 
-                        <strong><%= weatherDescription.feels_like.toFixed(2) %> °C</strong>
+                        <strong><%= weatherDescription.feels_like.toFixed(2) %> °C</strong>,
+                        UVI: 
+                        <strong><%= weatherDescription.uvi %></strong>
                     </p>
                     <p class="mb-3">
                         <%= weatherDescription.weather[0].description %>
