@@ -26,13 +26,6 @@ app.get("/", async (req, res) => {
     const resultWeatherOverview = await apiQuery.queryWeatherDataOverview();
     canCallAPI.data.count+=2;
     apiQuery.setState(canCallAPI.data);
-    
-    // const weatherDescription = resultWeather.data.current.weather[0].description;
-    // const tempCelsius = resultWeather.data.current.temp.toFixed(2);
-    // const feelsLikeCelsius = resultWeather.data.current.feels_like.toFixed(2);
-    // const humidity = resultWeather.data.current.humidity;
-    // const icon = resultWeather.data.current.weather[0].icon;
-    // const dailyForecast = getDailyForecastDate(resultWeather);
 
     const apiCallsLeft = canCallAPI.data.limit - canCallAPI.data.count;
     console.log(`API Calls Left: ${apiCallsLeft}`);
@@ -44,13 +37,6 @@ app.get("/", async (req, res) => {
         dailyForecast: apiQuery.convertDailyForecastDate(resultWeather),
         hourlyForecast: apiQuery.CreateGraphData(resultWeather),
         geoCodeData: geoCodeData
-        // weatherDescription: weatherDescription,
-        // tempCelsius: tempCelsius,    
-        // feelsLikeCelsius: feelsLikeCelsius,
-        // humidity: humidity,
-        // icon: icon,
-        // forecast: daily,
-        // overviewResults: overviewResults
     });
 });
 
