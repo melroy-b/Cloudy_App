@@ -48,7 +48,7 @@ function getClothingAdvice({temp, weatherInfo, timeOfDay}) {
     }
 
     // Air quality
-    if (weather.includes("smoke")) {
+    if (weather.includes("smoke") || weather.includes("haze")) {
     icons.push("mask");
     }
 }
