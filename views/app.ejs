@@ -7,9 +7,13 @@
         <p style="font-size: xx-small; text-align: end;">API Calls Remaining: <strong><%= apiCallsLeft %></strong></p>
     </div>
     <div>
-        <!-- <div class="">
-            <p id="main-message">Beautiful weather !</p>
-        </div> -->
+        <div class="">
+            <ul class="d-flex list-unstyled">
+                <% for (let index = 0; index < icons.length; index++) { %>
+                    <li><img src="/assets/<%=icons[index]%>.png" alt="" width="60" height="60"></li>
+                <% } %>
+            </ul>
+        </div>
         <div class="row">
             <div class="col-12 col-xl-5">
                 <% if (geoCodeData.placeFound) { %>

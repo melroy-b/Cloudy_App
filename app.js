@@ -2,6 +2,7 @@ import express from "express";
 import path, {dirname} from "path";
 import {fileURLToPath} from "url";
 import * as apiQuery from "./components/api-query.js"
+import displayImageOnUI from "./components/ui-message.js"
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -30,13 +31,18 @@ app.get("/", async (req, res) => {
     const apiCallsLeft = canCallAPI.data.limit - canCallAPI.data.count;
     console.log(`API Calls Left: ${apiCallsLeft}`);
 
+    //display icons on UI based on the weather
+    const icons = displayImageOnUI(resultWeather.data?.current);
+    console.log(icons);
+
     res.render("app.ejs", {
         apiCallsLeft: apiCallsLeft,
         weatherDescription: resultWeather.data?.current,
         weatherOverview: resultWeatherOverview.data?.weather_overview || "Data Not Found",
         dailyForecast: apiQuery.convertDailyForecastDate(resultWeather),
         hourlyForecast: apiQuery.CreateGraphData(resultWeather),
-        geoCodeData: geoCodeData
+        geoCodeData: geoCodeData,
+        icons: icons
     });
 });
 
