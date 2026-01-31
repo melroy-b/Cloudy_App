@@ -41,7 +41,7 @@ function getClothingAdvice({temp, weatherInfo, timeOfDay}) {
     }
 
     // Weather condition icons
-    if (weather.includes("rain")) {
+    if (weather.includes("rain") || weather.includes("thunderstorm")) {
     icons.push("raincoat", "rainy");
     } else if (weather.includes("cloud") || weather.includes("sky")) {
     icons.push(timeOfDay.includes("d") ? "sun" : "moon");
