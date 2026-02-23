@@ -116,6 +116,6 @@ docker run -p 3000:3000 --env-file .env cloudy-app
 ---
 
 ## 🌍 Live Demo 
-```bash
+
 https://cloudy-app-y7nf.onrender.com
-```
+
